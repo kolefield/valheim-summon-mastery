@@ -1,0 +1,9 @@
+{
+  "name": "Summon_Mastery",
+  "version_number": "0.1.0",
+  "website_url": "https://github.com/kolefield/valheim-summon-mastery",
+  "description": "Scale summoned creatures' health, regeneration, armor, movement and damage with weapon upgrade rank. Nearby following summons can travel through portals. Configurable development release.",
+  "dependencies": [
+    "denikson-BepInExPack_Valheim-5.4.2350"
+  ]
+}
