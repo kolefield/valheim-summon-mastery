@@ -1,4 +1,4 @@
-# Summon Mastery 0.1.0
+# Summon Mastery 0.1.1
 
 Summoned creatures grow stronger with the upgrade rank of the weapon that creates them.
 Nearby following summons can accompany you through portals without being replaced or healed.
@@ -6,6 +6,25 @@ Nearby following summons can accompany you through portals without being replace
 Initial development release for Valheim 1.0.7. Build, offline rules/API checks and plugin
 initialization in Valheim have been verified. Combat balance, portal travel and multiplayer
 still need gameplay validation. See the [verification report](https://github.com/kolefield/valheim-summon-mastery/blob/main/VERIFICATION.md).
+
+## Dismiss summons
+
+Press **O** during gameplay to dismiss all of your living summons tracked by this mod
+in the current world, including waiting, hostile and unloaded summons. Other players'
+summons, ordinary pets and wild creatures are left alone. Dismissal grants no drops or
+skill rewards. It cannot be undone; summon new creatures if you want them back.
+
+Change **Controls / Dismiss all summons** in a BepInEx configuration manager, or edit
+`BepInEx/config/local.summonmastery.cfg` while the game is closed:
+
+```ini
+[Controls]
+Dismiss all summons = O
+```
+
+Modifier shortcuts such as `O + LeftControl` are supported; `None` disables the shortcut.
+The key is ignored while typing, in menus/inventory/map, during death/cutscenes or portal travel.
+All clients and the server need version **0.1.1** for the new dismissal request.
 
 ## Scaling
 

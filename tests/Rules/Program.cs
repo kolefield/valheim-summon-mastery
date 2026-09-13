@@ -14,6 +14,11 @@ static class Program
     static void Main()
     {
         var maximum = new Scaling(3, .005f, 35, 1.3f, 2.5f);
+        Check(Scaling.CanDismiss(true, 10, 10, false), "own tracked summon can be dismissed without a range or follow requirement");
+        Check(!Scaling.CanDismiss(true, 10, 11, false), "dismissal excludes another player's summons");
+        Check(!Scaling.CanDismiss(false, 10, 10, false), "dismissal excludes untracked creatures and pets");
+        Check(!Scaling.CanDismiss(true, 0, 0, false), "dismissal rejects missing player identity");
+        Check(!Scaling.CanDismiss(true, 10, 10, true), "dismissal leaves dead records alone");
         var first = Scaling.ForRank(1, 4, maximum);
         Check(first.Health == 1 && first.Regen == 0 && first.Armor == 0 && first.Speed == 1 && first.Damage == 1,
             "rank 1 preserves all five original stats");

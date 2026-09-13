@@ -1,3 +1,19 @@
+# Verification — 0.1.1 — 2026-09-13
+
+- Release build against the current installed Valheim assemblies and Gale Default BepInEx 5.4.2350 passed (zero errors; two existing transitive assembly warnings).
+- 36 executable rules checks passed, including own-summon dismissal eligibility, rejection of other players, untracked creatures, missing identity and dead records.
+- 109 game/Unity references resolved with public accessibility. All 12 Harmony targets, Player.TakeInput and reflected/injected fields matched the installed game.
+- Dismissal enumerates the server's recorded summoner keys; no range, follow or tame filter excludes waiting, hostile or unloaded summons. The server obtains player identity from the requesting peer rather than trusting a submitted identity.
+- Default O is a BepInEx KeyboardShortcut config entry; modifier combinations and None are supported. Input is checked every frame before discovery throttling and gated by vanilla Player.TakeInput.
+- Reviewed network session re-registration, server-only deletion, result-sender validation, rate limiting and deletion without death rewards. These are code/API checks, not live networking tests.
+- Valheim was running during this update. The active DLL was not replaced. Live shortcut input, configuration-manager rebinding and multiplayer/unloaded-world dismissal remain unverified.
+- The user reported a Spirit Caller summon following through a portal with 0.1.0; exact combat bonuses were not measured.
+
+DLL SHA-256: `D39C46213B8E503A422D20DC1D776C1ADEC5C8E19404929B0E694CB1BDF63CBE`
+
+Before claiming full gameplay verification, test O and a rebound modifier shortcut; press them in chat, console, menus, inventory and map; dismiss own following/waiting/hostile and unloaded summons; ensure another player's tracked summons and ordinary pets remain; test two clients plus a dedicated server all on 0.1.1; verify no loot and no portal recreation after dismissal. Use disposable saves.
+
+## Historical 0.1.0 verification
 # Verification — 2026-09-10
 
 ## Completed

@@ -10,17 +10,20 @@ namespace SummonMastery;
 [BepInPlugin(Id, "Summon Mastery", Version)]
 public sealed class Plugin : BaseUnityPlugin
 {
-    public const string Id = "local.summonmastery", Version = "0.1.0";
+    public const string Id = "local.summonmastery", Version = "0.1.1";
     internal const string Key = "summonmastery.v1.";
     internal static Plugin Instance;
     internal static ConfigEntry<float> MaxHealth, MaxRegen, MaxArmor, MaxSpeed, MaxDamage, RegenDelay, PortalRange;
     internal static ConfigEntry<bool> Portals;
+    internal static ConfigEntry<KeyboardShortcut> DismissKey;
     private Harmony harmony;
     private float nextScan;
 
     private void Awake()
     {
         Instance = this;
+        DismissKey = Config.Bind("Controls", "Dismiss all summons", new KeyboardShortcut(KeyCode.O),
+            "Dismiss all your tracked summons in this world, including waiting and distant summons. Supports modifier keys. Set to None to disable.");
         MaxHealth = Number("Scaling", "Maximum rank health multiplier", 3f, 1f, 20f,
             "Multiplies the summon health after normal skill/star scaling. Rank 1 is unchanged.");
         MaxDamage = Number("Scaling", "Maximum rank damage multiplier", 2.5f, 1f, 10f,
@@ -58,6 +61,7 @@ public sealed class Plugin : BaseUnityPlugin
 
     private void Update()
     {
+        Dismissal.Update();
         if (Time.unscaledTime < nextScan) return;
         nextScan = Time.unscaledTime + 1f;
         // Remote ZDO metadata can arrive after Character.Awake. Scan once per second, not per creature/frame.

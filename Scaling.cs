@@ -5,6 +5,8 @@ namespace SummonMastery;
 // Pure rules shared with the regression executable. Rank means item upgrade quality.
 public readonly struct Scaling
 {
+    public static bool CanDismiss(bool tagged, long summoner, long player, bool dead) =>
+        tagged && player != 0 && summoner == player && !dead;
     public readonly float Health, Regen, Armor, Speed, Damage;
     public Scaling(float health, float regen, float armor, float speed, float damage)
     { Health = health; Regen = regen; Armor = armor; Speed = speed; Damage = damage; }

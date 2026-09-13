@@ -37,6 +37,7 @@ $targets = @(
     @('Aoe','GetDamage','System.Int32','HitData/DamageTypes'),
     @('Player','TeleportTo','UnityEngine.Vector3,UnityEngine.Quaternion,System.Boolean','System.Boolean'),
     @('Player','UpdateTeleport','System.Single','System.Void'),
+    @('Player','TakeInput','','System.Boolean'),
     @('Tameable','UpdateSummon','','System.Void'),
     @('Tameable','UpdateSavedFollowTarget','','System.Void')
 )

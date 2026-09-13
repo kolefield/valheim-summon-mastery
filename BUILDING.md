@@ -20,7 +20,7 @@ Override with `-p:GameDir="..." -p:ProfileDir="..."`. Pass the matching `-GameDi
 `-ProfileDir` values to the API checker.
 
 Output: `bin/Release/netstandard2.1/SummonMastery.dll`.
-Package: `dist/SummonMastery-0.1.0.zip`, suitable for Thunderstore or manual installation.
+Package: `dist/SummonMastery-0.1.1.zip`, suitable for Thunderstore or manual installation.
 Packaging validates the manifest, icon, versions, allowed contents and DLL hash, using the already-built DLL;
 rebuild after source changes.
 
@@ -51,6 +51,18 @@ and System.IO.Compression versions. This mod does not call either library.
 - Exactly 12 methods are patched. Dependencies and hook signatures must be rechecked
   after game updates. Do not compile against publicized assemblies as a substitute for
   runtime-accessible members.
+
+## Dismissal (0.1.1)
+
+`Dismissal.cs` polls the configurable BepInEx KeyboardShortcut before the once-per-second
+discovery throttle and uses Player.TakeInput for vanilla UI/input rejection. It registers
+two routed RPCs for each network session: `local.summonmastery.DismissAll.v1` (no arguments,
+client to server) and `local.summonmastery.DismissResult.v1` (integer count, server to client).
+The server derives character identity from the connected peer, validates character ownership,
+and enumerates tracked summoner ZDO keys across loaded and unloaded sectors. It claims and
+destroys only matching living records using vanilla ZDO destruction, without invoking death.
+Requests are rate limited to one per second. Existing summon/save/config keys are unchanged.
+The response is accepted only from the server. All peers need 0.1.1 for these new RPCs.
 
 `work/` contains local inspection files and test logs and is deliberately ignored/excluded
 from compilation and packaging. It includes proprietary decompiled game code used only
