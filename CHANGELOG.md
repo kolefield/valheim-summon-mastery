@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.1.2
+
+- Add opt-in **Scaling / Exclude Trollstav**, off by default. New Trollstav summons keep
+  normal stats but remain tracked for dismissal. Existing summons retain their recorded stats.
+
+- Add opt-in **Summoning / Spirit Caller wolves only**, off by default.
+- Restrict new Spirit Caller casts to its existing ghost wolf prefab while preserving
+  normal costs, summon limits and Summon Mastery behavior.
+- Preserve shared prefab pools and other weapons, restore selection after each coroutine
+  step, and fall back to normal selection if the ghost wolf is unavailable.
+- Verified the actual weapon-to-spawn-ability asset link and four-creature pool.
+- Build, API checks and 59 rules/coroutine checks passed; live wolves-only casting and
+  Trollstav exclusion unverified.
+
 ## 0.1.1
 
 - Add configurable dismissal shortcut, default O, with optional modifiers or None to disable.

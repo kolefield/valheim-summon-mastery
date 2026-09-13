@@ -5,6 +5,10 @@ namespace SummonMastery;
 // Pure rules shared with the regression executable. Rank means item upgrade quality.
 public readonly struct Scaling
 {
+    public const string Trollstav = "StaffRedTroll";
+    public static bool IsExcluded(bool excludeTrollstav, string weapon) => excludeTrollstav && weapon == Trollstav;
+    public static Scaling ForWeapon(bool excludeTrollstav, string weapon, int rank, int maxRank, Scaling maximum) =>
+        IsExcluded(excludeTrollstav, weapon) ? new Scaling(1f, 0f, 0f, 1f, 1f) : ForRank(rank, maxRank, maximum);
     public static bool CanDismiss(bool tagged, long summoner, long player, bool dead) =>
         tagged && player != 0 && summoner == player && !dead;
     public readonly float Health, Regen, Armor, Speed, Damage;

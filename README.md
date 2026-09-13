@@ -1,4 +1,4 @@
-# Summon Mastery 0.1.1
+# Summon Mastery 0.1.2
 
 Summoned creatures grow stronger with the upgrade rank of the weapon that creates them.
 Nearby following summons can accompany you through portals without being replaced or healed.
@@ -26,7 +26,41 @@ Modifier shortcuts such as `O + LeftControl` are supported; `None` disables the 
 The key is ignored while typing, in menus/inventory/map, during death/cutscenes or portal travel.
 All clients and the server need version **0.1.1** for the new dismissal request.
 
+## Spirit Caller: wolves only
+
+Enable **Summoning / Spirit Caller wolves only** to make new Spirit Caller casts summon
+only ghost wolves instead of randomly choosing bears, moose, wolves or boars. It is **off
+by default**. Use a BepInEx configuration manager, or edit the config while the game is closed:
+
+```ini
+[Summoning]
+Spirit Caller wolves only = true
+```
+
+Existing spirits remain unchanged. Normal casting costs, summon limits, Blood Magic,
+weapon-rank scaling, portal following and dismissal continue through the normal paths.
+Other weapons and wild wolves are unaffected. If another mod or a game update removes the
+ghost wolf from the cast's selection pool, the mod logs a warning and keeps normal selection
+for that cast. The option is captured at cast start; changes affect the next cast.
+
+The selection mechanism has been verified against the installed game's assets and tested
+with coroutine fixtures. Live wolves-only casting has not yet been tested. Use 0.1.2 on all
+peers; this setting is per casting client, like the existing scaling settings.
+
 ## Scaling
+
+**Scaling / Exclude Trollstav** is off by default. Enable it to leave newly summoned
+Trollstav creatures at their normal health, regeneration, armor, movement and damage:
+
+```ini
+[Scaling]
+Exclude Trollstav = true
+```
+
+Normal game and Blood Magic effects remain. Excluded trolls are still tracked for the
+dismiss shortcut; their hostility and portal eligibility are unchanged. Existing summons
+keep the stats recorded when they were cast, so dismiss and summon again after changing
+this setting. Spirit Caller and Dead Raiser scaling are unaffected.
 
 Rank means the weapon's upgrade quality, not Blood Magic level or creature stars.
 Bonuses interpolate from unchanged stats at rank 1 to these configurable maximums:
@@ -66,7 +100,7 @@ and network ownership changes without multiplying repeatedly.
 - The same hook covers other weapon-created creatures using `SpawnAbility`, including
   Trollstav's summoned troll when the weapon is passed through the normal projectile chain.
 - Original factions and hostility are preserved: a hostile summoned troll becomes stronger
-  too and is **not** converted into a friendly portal companion.
+  unless **Exclude Trollstav** is enabled, and is **not** converted into a friendly portal companion.
 - Direct attacks, attack-generated projectiles/areas and independent owned area effects
   are covered. Attack-generated areas are not multiplied twice.
 - Wild creatures, ordinary pets, enemy summons, and spawned effects without a creature

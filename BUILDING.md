@@ -20,7 +20,7 @@ Override with `-p:GameDir="..." -p:ProfileDir="..."`. Pass the matching `-GameDi
 `-ProfileDir` values to the API checker.
 
 Output: `bin/Release/netstandard2.1/SummonMastery.dll`.
-Package: `dist/SummonMastery-0.1.1.zip`, suitable for Thunderstore or manual installation.
+Package: `dist/SummonMastery-0.1.2.zip`, suitable for Thunderstore or manual installation.
 Packaging validates the manifest, icon, versions, allowed contents and DLL hash, using the already-built DLL;
 rebuild after source changes.
 
@@ -63,6 +63,22 @@ and enumerates tracked summoner ZDO keys across loaded and unloaded sectors. It 
 destroys only matching living records using vanilla ZDO destruction, without invoking death.
 Requests are rate limited to one per second. Existing summon/save/config keys are unchanged.
 The response is accepted only from the server. All peers need 0.1.1 for these new RPCs.
+
+## Spirit Caller selection (0.1.2)
+
+`SpawnSelection.cs` filters only casts whose weapon prefab is exactly `StaffSpiritCaller`.
+It selects existing `Wolf_spiritcaller` references from that cast's actual spawn pool and
+temporarily assigns a new array around each original coroutine MoveNext. A finally block
+restores the previous array before yielding or propagating an exception. The shared prefab
+array is not edited. SpawnContext captures the filtered creature names for normal scaling.
+Missing wolf references preserve the original behavior and produce a warning. No new patch,
+RPC, network record or save migration is required. The config default is false.
+
+`Scaling.ForWeapon` also handles opt-in Trollstav exclusion using the verified exact weapon
+prefab `StaffRedTroll`. Excluded casts keep tracking metadata but record neutral scaling
+(1x health/movement/damage, zero added armor/regeneration), and skip initial health writes.
+The choice is captured at cast start and saved per creature, so existing creatures retain
+their original stats and later config changes cannot cause a partial stat reset.
 
 `work/` contains local inspection files and test logs and is deliberately ignored/excluded
 from compilation and packaging. It includes proprietary decompiled game code used only

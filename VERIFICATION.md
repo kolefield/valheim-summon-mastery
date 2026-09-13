@@ -1,3 +1,29 @@
+# Verification — 0.1.2 — 2026-09-13
+
+## Feasibility confirmed before implementation
+
+Read the installed game's SoftRef manifest and asset bundle with UnityPy 1.25.3 in an ignored local inspection directory. No game files were modified.
+
+- `Assets/GameElements/Items/weapons/StaffSpiritCaller.prefab`: weapon name `StaffSpiritCaller`, maximum quality 4; its ItemDrop attack projectile references the spawn ability below.
+- `Assets/GameElements/Items/weapons/_res/staffs/staff_SpiritCaller_spawn.prefab`: a standard SpawnAbility with the pool `Bjorn_spiritcaller`, `Moose_spiritcaller`, `Wolf_spiritcaller`, `Boar_spiritcaller`.
+- The ability uses command-on-spawn and copies Blood Magic; max-instance handling remains the game's existing code. Its 2.5-second pre-spawn delay makes coroutine-step restoration relevant.
+- This confirms the feature can filter a cast's existing pool without replacing creatures afterward or changing shared game assets.
+
+## Trollstav exclusion added
+
+Verified the installed weapon asset is exactly StaffRedTroll. The new Scaling / Exclude Trollstav setting defaults to false. Enabled casts record neutral values for all five stats and skip initial health changes while retaining dismissal tracking. Five additional regression checks cover all neutral stats, disabled behavior, other weapons and exact identity matching. Existing summons retain their recorded settings. Live Trollstav casting, toggling, dismissal and reload behavior remain unverified.
+
+## Checks completed
+
+- Release build: zero errors and the two existing transitive reference warnings.
+- 59 executable checks passed, including actual four-entry pool selection, disabled/unrelated/unfinished weapon exclusions, missing/null prefab fallback, non-mutation, delayed coroutine steps, completion and exception restoration, plus prior scaling/dismissal/armor rules.
+- 109 game/Unity member references and all reflected/patch targets checked against the installed assemblies. No additional Harmony targets were introduced.
+- New setting is `Summoning / Spirit Caller wolves only`, false by default. The setting and selection are captured per cast; existing summons are not converted.
+- DLL SHA-256: `86D3C0401D82177A7ACDDF8C8CBC5F7EA34D00BA53C39149DE98AB1932EE5BB5`.
+
+Valheim was running. No active DLL/config/save was changed, and no game was launched. Live repeated casting, costs/caps, co-op behavior and configuration-manager toggling remain unverified. In a disposable world, enable the option and cast repeatedly, confirm every new spirit is a ghost wolf, check rank scaling/portal/dismissal, disable it and verify mixed summons return. Also confirm Dead Raiser and Trollstav retain their original summon types.
+
+## Historical verification
 # Verification — 0.1.1 — 2026-09-13
 
 - Release build against the current installed Valheim assemblies and Gale Default BepInEx 5.4.2350 passed (zero errors; two existing transitive assembly warnings).

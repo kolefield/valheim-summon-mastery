@@ -6,6 +6,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="../../Scaling.cs" Link="Scaling.cs" />
+    <Compile Include="../../SpawnSelection.cs" Link="SpawnSelection.cs" />
     <Reference Include="$(GameDir)/valheim_Data/Managed/assembly_*.dll" />
     <Reference Include="$(GameDir)/valheim_Data/Managed/UnityEngine*.dll" />
   </ItemGroup>

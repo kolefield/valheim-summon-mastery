@@ -18,17 +18,26 @@ internal sealed class SpawnContext
     private readonly string weapon;
     private readonly Scaling scaling;
     private readonly float delay;
+    private readonly SpawnAbility ability;
+    private readonly GameObject[] selectedPrefabs;
+    private readonly bool excludedFromScaling;
 
     internal SpawnContext(SpawnAbility ability, Player player, ItemDrop.ItemData item)
     {
+        this.ability = ability;
         summoner = player.GetPlayerID();
         rank = Math.Max(1, item.m_quality);
         maximumRank = Math.Max(1, item.m_shared.m_maxQuality);
         weapon = item.m_dropPrefab ? item.m_dropPrefab.name : item.m_shared.m_name;
-        scaling = Scaling.ForRank(rank, maximumRank, new Scaling(Plugin.MaxHealth.Value,
+        selectedPrefabs = SpawnSelection.WolvesOnly(Plugin.SpiritCallerWolvesOnly.Value, weapon,
+            ability.m_spawnPrefab, prefab => prefab ? prefab.name : null);
+        if (Plugin.SpiritCallerWolvesOnly.Value && weapon == SpawnSelection.SpiritCaller && selectedPrefabs == null)
+            Plugin.Warn("Spirit Caller wolf prefab is absent from this cast's pool; keeping normal summons for this cast.");
+        excludedFromScaling = Scaling.IsExcluded(Plugin.ExcludeTrollstavScaling.Value, weapon);
+        scaling = Scaling.ForWeapon(Plugin.ExcludeTrollstavScaling.Value, weapon, rank, maximumRank, new Scaling(Plugin.MaxHealth.Value,
             Plugin.MaxRegen.Value, Plugin.MaxArmor.Value, Plugin.MaxSpeed.Value, Plugin.MaxDamage.Value));
         delay = Plugin.RegenDelay.Value;
-        foreach (var prefab in ability.m_spawnPrefab)
+        foreach (var prefab in selectedPrefabs ?? ability.m_spawnPrefab)
             if (prefab && prefab.GetComponent<Character>()) prefabs.Add(prefab.name);
     }
 
@@ -57,8 +66,11 @@ internal sealed class SpawnContext
             data.Set(Plugin.Key + "speed", scaling.Speed);
             data.Set(Plugin.Key + "damage", scaling.Damage);
             data.Set(Plugin.Key + "delay", delay);
-            character.SetMaxHealth(health);
-            character.SetHealth(health * fraction);
+            if (!excludedFromScaling)
+            {
+                character.SetMaxHealth(health);
+                character.SetHealth(health * fraction);
+            }
             if (!character.GetComponent<SummonState>()) character.gameObject.AddComponent<SummonState>();
         }
         Created.Clear();
@@ -73,7 +85,11 @@ internal sealed class SpawnContext
                 var previous = Current;
                 bool next;
                 Current = this;
-                try { next = original.MoveNext(); }
+                try
+                {
+                    next = SpawnSelection.Advance(original, selectedPrefabs,
+                        () => ability.m_spawnPrefab, pool => ability.m_spawnPrefab = pool);
+                }
                 finally
                 {
                     Current = previous;

@@ -10,11 +10,13 @@ namespace SummonMastery;
 [BepInPlugin(Id, "Summon Mastery", Version)]
 public sealed class Plugin : BaseUnityPlugin
 {
-    public const string Id = "local.summonmastery", Version = "0.1.1";
+    public const string Id = "local.summonmastery", Version = "0.1.2";
     internal const string Key = "summonmastery.v1.";
     internal static Plugin Instance;
     internal static ConfigEntry<float> MaxHealth, MaxRegen, MaxArmor, MaxSpeed, MaxDamage, RegenDelay, PortalRange;
     internal static ConfigEntry<bool> Portals;
+    internal static ConfigEntry<bool> SpiritCallerWolvesOnly;
+    internal static ConfigEntry<bool> ExcludeTrollstavScaling;
     internal static ConfigEntry<KeyboardShortcut> DismissKey;
     private Harmony harmony;
     private float nextScan;
@@ -22,6 +24,10 @@ public sealed class Plugin : BaseUnityPlugin
     private void Awake()
     {
         Instance = this;
+        ExcludeTrollstavScaling = Config.Bind("Scaling", "Exclude Trollstav", false,
+            "Keep normal stats for newly summoned Trollstav creatures. Dismissal tracking remains enabled. Existing summons keep their recorded stats.");
+        SpiritCallerWolvesOnly = Config.Bind("Summoning", "Spirit Caller wolves only", false,
+            "Spirit Caller summons only ghost wolves when enabled. Affects new casts; existing summons and other weapons are unchanged.");
         DismissKey = Config.Bind("Controls", "Dismiss all summons", new KeyboardShortcut(KeyCode.O),
             "Dismiss all your tracked summons in this world, including waiting and distant summons. Supports modifier keys. Set to None to disable.");
         MaxHealth = Number("Scaling", "Maximum rank health multiplier", 3f, 1f, 20f,
